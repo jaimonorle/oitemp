@@ -39,6 +39,12 @@ ul { margin: 8px 0 0 18px; color: var(--muted); }
 .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 22px var(--ring); }
 .small{ font-size:12px; color: var(--muted); }
 hr.sep{ border:none; height:1px; background: linear-gradient(90deg, transparent, rgba(148,163,184,.35), transparent); margin: 24px 0; }
+.pills{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.pill{ padding:6px 10px; border-radius:999px; border:1px solid rgba(148,163,184,.35); background: rgba(255,255,255,.03); font-size:12px; color:#cbd5e1; }
+.table{ width:100%; border-collapse: collapse; margin-top: 8px; }
+.table th, .table td{ border:1px solid var(--line); padding:10px; text-align:left; }
+.table th{ background: rgba(255,255,255,.03); color:#cbd5e1; }
+.note{ font-size: 13px; color: var(--muted); margin-top: 6px; }
 @media (max-width: 900px) {
   .grid { grid-template-columns: 1fr; }
   .kv { grid-template-columns: 1fr; }
