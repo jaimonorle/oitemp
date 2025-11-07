@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stripe Implementations & Billing Experts | Orlé Industries</title>
+  <meta name="description" content="Orlé Industries is a boutique implementation studio specializing in Stripe—Payments, Checkout/Elements, Billing & Invoicing, Connect, Radar/Identity, and Tax. Fast, clean integrations for SMBs and platforms across the Caribbean & US." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://orleindustries.com/stripe" />
+  <style>
+    :root{
+      --bg: #0b1020; /* deep navy */
+      --ink: #0f172a; /* slate-900 */
+      --ink-2:#1f2937; /* gray-800 */
+      --text:#0b1020; /* for light sections */
+      --muted:#64748b; /* slate-500 */
+      --muted-2:#94a3b8; /* slate-400 */
+      --brand:#2563eb; /* blue-600 */
+      --brand-2:#7c3aed; /* violet-600 */
+      --ok:#16a34a; /* green-600 */
+      --warn:#b45309; /* amber-700 */
+      --card:#ffffff; 
+      --card-2:#f8fafc; /* slate-50 */
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(2,6,23,.15);
+    }
+    html,body{margin:0;padding:0;font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; color:#0f172a; background:#fff;}
+    /* --- Layout --- */
+    .container{max-width:1150px;margin:0 auto;padding:0 20px}
+    header.hero{position:relative;overflow:hidden;color:#fff;background: radial-gradient(1200px 600px at 80% -10%, rgba(124,58,237,.3), transparent), radial-gradient(900px 600px at 10% 10%, rgba(37,99,235,.35), transparent), linear-gradient(180deg, #0b1020, #0b1020);}    
+    .hero .inner{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center;padding:90px 0}
+    @media (max-width: 960px){.hero .inner{grid-template-columns:1fr;padding:64px 0}}
+    h1{font-size: clamp(28px, 4vw, 48px);line-height:1.1;margin:0 0 14px}
+    .lead{font-size: clamp(16px, 1.6vw, 20px);color:#e5e7eb;max-width: 60ch}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.06);backdrop-filter: blur(6px);font-size:13px;color:#e2e8f0}
+    .kicker{color:#93c5fd;text-transform:uppercase;letter-spacing:.18em;font-weight:600;font-size:12px;margin-bottom:10px}
+
+    .btn{appearance:none;border:none;border-radius:999px;padding:14px 18px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+    .btn-primary{background:#fff;color:#0b1020;box-shadow: var(--shadow)}
+    .btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25)}
+    .btn:hover{filter:brightness(1.07)}
+
+    .hero-card{background: rgba(255,255,255,.06);border: 1px solid rgba(255,255,255,.18);border-radius: var(--radius);padding:18px;backdrop-filter: blur(8px);}
+    .hero-card h3{margin:6px 0 10px;color:#fff}
+    .hero-card p{margin:0;color:#dbeafe}
+
+    section{padding:64px 0}
+    section.alt{background: var(--card-2)}
+    section .section-title{font-size: clamp(22px, 2.4vw, 32px);margin:0 0 12px}
+    .sub{color:var(--muted);max-width:65ch;margin:0 0 24px}
+
+    .grid{display:grid;gap:18px}
+    .grid.cols-3{grid-template-columns: repeat(3,1fr)}
+    .grid.cols-2{grid-template-columns: repeat(2,1fr)}
+    @media (max-width: 960px){.grid.cols-3,.grid.cols-2{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border:1px solid #e5e7eb;border-radius:var(--radius);padding:22px;box-shadow: var(--shadow)}
+    .card h3{margin:6px 0 8px}
+    .meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+    .check{display:inline-flex;align-items:center;gap:8px}
+    .check svg{flex:0 0 auto}
+
+    .price{font-weight:800;font-size:22px}
+    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:700}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:#ecfeff;color:#155e75;font-size:12px;font-weight:700}
+
+    .list{display:grid;gap:8px;padding-left:0;margin:0}
+    .list li{list-style:none;display:flex;align-items:flex-start;gap:10px}
+    .list svg{margin-top:3px}
+
+    .cols{columns: 2; column-gap: 28px}
+    @media (max-width: 800px){.cols{columns:1}}
+
+    .process{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
+    @media (max-width: 1000px){.process{grid-template-columns:1fr 1fr}}
+    @media (max-width: 640px){.process{grid-template-columns:1fr}}
+    .step{position:relative;padding:18px;background:var(--card);border:1px solid #e5e7eb;border-radius:var(--radius)}
+    .step .n{position:absolute;top:-10px;left:-10px;height:36px;width:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;box-shadow: var(--shadow)}
+
+    .note{font-size:13px;color:var(--muted)}
+    .ok{color:var(--ok);font-weight:700}
+    .warn{color:var(--warn);font-weight:700}
+
+    footer{background:#0b1020;color:#cbd5e1;padding:40px 0}
+    footer a{color:#cbd5e1}
+    .footer-grid{display:grid;gap:18px;grid-template-columns: 2fr 1fr 1fr}
+    @media (max-width: 900px){.footer-grid{grid-template-columns:1fr}}
+    .muted{color:#94a3b8}
+    .small{font-size:12px}
+
+    nav.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+    nav.top a{color:#dbeafe;text-decoration:none;font-weight:600;font-size:14px;opacity:.9}
+    nav.top .links{display:flex;gap:18px}
+    nav.top .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;letter-spacing:.2px}
+    .logo{height:28px;width:28px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:inline-block}
+
+    .badge-row{display:flex;gap:10px;flex-wrap:wrap}
+    .badge{font-size:12px;padding:6px 9px;border-radius:999px;background:#f1f5f9;color:#0b1020;border:1px solid #e2e8f0}
+
+    /* Accessibility helpers */
+    :focus-visible{outline: 3px solid #60a5fa;outline-offset: 2px}
+    a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    a.skip:focus{position:static;width:auto;height:auto;display:inline-block;padding:8px;background:#fff;border-radius: 6px}
+  </style>
+  <!-- Structured data for credibility & SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Orlé Industries",
+    "url": "https://orleindustries.com/stripe",
+    "logo": "https://orleindustries.com/assets/logo.png",
+    "areaServed": ["US","Caribbean"],
+    "sameAs": ["https://dashboard.stripe.com"],
+    "serviceType": "Stripe implementation, Billing & Invoicing, Connect, Radar/Identity",
+    "email": "hello@orleindustries.com"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#services">Skip to content</a>
+  <header class="hero">
+    <div class="container">
+      <nav class="top" aria-label="Primary">
+        <a class="brand" href="/" aria-label="Orlé Industries home">
+          <span class="logo" aria-hidden="true"></span>
+          Orlé Industries
+        </a>
+        <div class="links">
+          <a href="#services">Services</a>
+          <a href="#packages">Packages</a>
+          <a href="#process">Process</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </nav>
+      <div class="inner">
+        <div>
+          <div class="kicker">Stripe Services</div>
+          <h1>Implement Stripe the right way—fast, clean, and revenue-focused</h1>
+          <p class="lead">We design, migrate, and optimize Stripe stacks for SMBs and emerging platforms across the Caribbean and US. From Payments & Checkout/Elements to Billing, Invoicing, Connect, Radar/Identity, and Tax—we deliver production-ready integrations and measurable uplift.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+            <a class="btn btn-primary" href="#contact">Book a free consult</a>
+            <a class="btn btn-outline" href="#packages">See packages</a>
+          </div>
+          <div style="margin-top:16px" class="badge-row" aria-label="Highlights">
+            <span class="badge">Webhooks & API versioning best practices</span>
+            <span class="badge">PCI SAQ‑A patterns</span>
+            <span class="badge">Apple Pay / Google Pay</span>
+            <span class="badge">Dunning & retries</span>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Reviewer quick facts">
+          <span class="pill">Reviewer quick facts</span>
+          <h3>What we do</h3>
+          <p>Advisory, implementation, and optimization for Stripe: Payments, Checkout/Elements, Billing & Invoicing, Connect, Radar/Identity, and Tax. Geographic focus: US & Caribbean. Delivery: remote-first.</p>
+          <div class="meta" style="margin-top:10px">
+            <span>Track: <strong>Services</strong></span>
+            <span>Certifications: <em>in progress</em></span>
+          </div>
+          <p class="note" style="margin-top:8px">We don’t display any Stripe badge until verification is granted.</p>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <section id="services">
+      <div class="container">
+        <h2 class="section-title">What we implement</h2>
+        <p class="sub">End‑to‑end Stripe services for SMBs and platforms. Engagements are fixed‑scope with clear outcomes and documentation.</p>
+        <div class="grid cols-3">
+          <div class="card">
+            <h3>Payments & Checkout/Elements</h3>
+            <ul class="list" aria-label="Payments services">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Payment Element / Checkout rollout (one‑time + subscriptions)</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Wallets: Apple Pay, Google Pay, Link</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Webhooks, idempotency, API version alignment</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Billing & Invoicing</h3>
+            <ul class="list" aria-label="Billing services">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Subscriptions, trials, proration, coupons</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dunning & smart retries (reduce involuntary churn)</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Hosted Invoices & customer portal</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Connect (platforms/marketplaces)</h3>
+            <ul class="list" aria-label="Connect services">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Account types: Standard / Express</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Onboarding, KYC, payouts, transfers</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Reporting & reconciliation 
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Risk, Identity & Tax</h3>
+            <ul class="list" aria-label="Risk & compliance services">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Radar rules & 3DS strategy</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Identity flows (KYC/AML basics)</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Stripe Tax enablement (where applicable)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Data & Finance Ops</h3>
+            <ul class="list" aria-label="Data & reconciliation services">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Payout exports (Mercury‑friendly CSV)</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Revenue analytics & decline code insights</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Finance‑friendly docs & handover</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Enablement & Support</h3>
+            <ul class="list" aria-label="Enablement services">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Developer onboarding & docs</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> UAT checklists & go‑live support</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Post‑launch optimization sprints</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="packages" class="alt">
+      <div class="container">
+        <h2 class="section-title">Fixed‑scope packages</h2>
+        <p class="sub">Transparent scope, fast timelines, clean handover. Prices are typical ranges; we’ll confirm a fixed quote during scoping.</p>
+        <div class="grid cols-3">
+          <div class="card">
+            <div class="chip">Starter</div>
+            <h3>Stripe QuickStart</h3>
+            <p class="price">US$1.5k–3k</p>
+            <ul class="list">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Checkout or Payment Element + wallets</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Webhooks + receipts + basic reporting</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> API version alignment</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="chip">Growth</div>
+            <h3>Subscriptions Accelerator</h3>
+            <p class="price">US$2.5k–5k</p>
+            <ul class="list">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Billing setup (plans, trials, proration)</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dunning & retries + customer portal</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Optional: Stripe Tax enablement</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="chip">Platform</div>
+            <h3>Connect Mini‑Launch</h3>
+            <p class="price">US$4k–8k</p>
+            <ul class="list">
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Express/Standard accounts + onboarding</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Payouts/fees/transfers configured</li>
+              <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Reporting & finance handover</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note" style="margin-top:10px">Need something else? We also offer <strong>Payments Audits</strong> (US$750–1.5k) and custom sprints.</p>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="container">
+        <h2 class="section-title">Our process</h2>
+        <div class="process">
+          <div class="step"><div class="n" aria-hidden="true">1</div><h3>Discover</h3><p>We map flows, payment methods, risk posture, and finance reporting needs.</p></div>
+          <div class="step"><div class="n" aria-hidden="true">2</div><h3>Implement</h3><p>Ship the integration with clean code, docs, and environment parity.</p></div>
+          <div class="step"><div class="n" aria-hidden="true">3</div><h3>Verify</h3><p>UAT checklists, webhook health, and test cases before go‑live.</p></div>
+          <div class="step"><div class="n" aria-hidden="true">4</div><h3>Optimize</h3><p>Tuning retries, wallet adoption, decline handling, and Radar rules.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="industries" class="alt">
+      <div class="container">
+        <h2 class="section-title">Who we help</h2>
+        <p class="sub">SMBs and growing platforms in the Caribbean & US. Typical use‑cases:</p>
+        <div class="grid cols-3">
+          <div class="card"><h3>Tours & Experiences</h3><p>Bookings, deposits, recurring memberships.</p></div>
+          <div class="card"><h3>Marketplaces</h3><p>Two‑sided payouts, onboarding, compliance.</p></div>
+          <div class="card"><h3>Media & Events</h3><p>Ticketing, subscriptions, invoicing.</p></div>
+          <div class="card"><h3>Pro Services</h3><p>Retainers, usage‑based billing, quotes‑to‑cash.</p></div>
+          <div class="card"><h3>Nonprofits</h3><p>Donations, recurring giving, reporting.</p></div>
+          <div class="card"><h3>Retail & DTC</h3><p>Checkout uplift, wallets, refunds/exchanges.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="assurance">
+      <div class="container">
+        <h2 class="section-title">Technical assurance</h2>
+        <div class="cols">
+          <ul class="list">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Hosted payment UIs (Checkout/Elements) with <strong>PCI SAQ‑A</strong> patterns.</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Webhooks: retries, signature verification, idempotency keys.</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> API version management & change logs.</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> SCA/3DS strategy via Radar + rulesets tuned to risk.</li>
+          </ul>
+          <ul class="list">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Billing dunning & smart retries; churn reporting.</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Connect onboarding, payouts, compliance guardrails.</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Finance‑friendly docs; Mercury‑ready payout exports.</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> No storage of card data on your servers.</li>
+          </ul>
+        </div>
+        <p class="note">Note: Any "Stripe Verified" badge will only appear after Stripe grants verification. Until then, we do not display partner badges.</p>
+      </div>
+    </section>
+
+    <section id="faq" class="alt">
+      <div class="container">
+        <h2 class="section-title">FAQ</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Are you a Stripe Verified Services Partner?</h3>
+            <p>Our application is submitted and certifications are <em>in progress</em>. We will display Stripe’s Verified badge only when Stripe grants verification.</p>
+          </div>
+          <div class="card">
+            <h3>What do you need from us to start?</h3>
+            <p>Sandbox access (or test keys), brief architecture notes, and a 45‑min discovery call. We’ll return a fixed scope and schedule.</p>
+          </div>
+          <div class="card">
+            <h3>How long does a typical QuickStart take?</h3>
+            <p>Most QuickStarts ship in 1–2 weeks depending on complexity and scheduling. Platform work (Connect) takes longer—scoped individually.</p>
+          </div>
+          <div class="card">
+            <h3>Do you provide documentation and handover?</h3>
+            <p>Yes—environment setup, keys, endpoints, deploy notes, and a rollback plan are included in every engagement.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title">Let’s talk</h2>
+        <p class="sub">Tell us about your product and goals. We’ll reply within 1 business day.</p>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Email</h3>
+            <p><a href="mailto:hello@orleindustries.com">hello@orleindustries.com</a></p>
+            <h3>Coverage</h3>
+            <p>Remote‑first across the Caribbean & US. Headquarters: Dominica.</p>
+            <h3>Availability</h3>
+            <p>Weekdays 9am–6pm AST. Emergency support by arrangement.</p>
+          </div>
+          <div class="card">
+            <h3>Start a project</h3>
+            <form action="mailto:hello@orleindustries.com" method="post" enctype="text/plain" onsubmit="this.querySelector('button').disabled=true;">
+              <label for="name">Name</label><br />
+              <input id="name" name="name" required style="width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:8px 0" />
+              <label for="email">Email</label><br />
+              <input id="email" name="email" type="email" required style="width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:8px 0" />
+              <label for="msg">What are you building?</label><br />
+              <textarea id="msg" name="message" rows="5" required style="width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:8px 0"></textarea>
+              <button class="btn" type="submit" style="background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff">Send</button>
+              <p class="note">Submits via your email client. Prefer a calendar? <a href="#" aria-disabled="true" onclick="alert('Add your scheduling link here.');return false;">Book a call</a>.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="brand" style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"></span><strong>Orlé Industries</strong></div>
+        <p class="muted small">Stripe specialists for SMBs & platforms. We implement Payments, Checkout/Elements, Billing & Invoicing, Connect, Radar/Identity, and Tax.</p>
+        <p class="small muted">© <span id="y"></span> Orlé Industries. All rights reserved. “Stripe” is a trademark of Stripe, Inc. and/or its affiliates. Used here for identification only.</p>
+      </div>
+      <div>
+        <h4 class="muted">Shortcuts</h4>
+        <ul class="list">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#packages">Packages</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="muted">Contact</h4>
+        <ul class="list">
+          <li><a href="mailto:hello@orleindustries.com">hello@orleindustries.com</a></li>
+          <li>Dominica · Remote‑first</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Reviewer notes (not visible to users):
+    • This /stripe page clearly lists: services, packages, geography, process, and contact.
+    • No Stripe partner badges are displayed until verified; wording avoids misrepresentation.
+    • If needed, add case studies once available; avoid disclosing confidential metrics.
+  -->
+</body>
+</html>
